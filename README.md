@@ -14,7 +14,7 @@ config :elixir_metrics,
 
 in your application tree
 ```
-supervisor(ElixirMetrics, metrics_children),
+supervisor(ElixirMetrics, [metrics_children]),
 ```
 
 Where metrics_children is any polling processes you want to install. It can be `[]` and you can

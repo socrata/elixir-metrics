@@ -6,10 +6,10 @@ defmodule ElixirMetrics.Collectd do
   @app_name Application.get_env(:elixir_metrics, :app_name)
   @read_timeout 15_000
   @buffer_max 200
-  @socket_path :erlang.binary_to_list(Application.get_env(:elixir_metrics, :unixsock))
-  @interval Application.get_env(:elixir_metrics, :collection_interval)
-  @connect_timeout Application.get_env(:elixir_metrics, :connect_timeout)
-  @reconnect_interval Application.get_env(:elixir_metrics, :reconnect_interval)
+  @socket_path :erlang.binary_to_list(Application.get_env(:elixir_metrics, :unixsock, "/var/run/collectd-unixsock"))
+  @interval Application.get_env(:elixir_metrics, :collection_interval, 10_000)
+  @connect_timeout Application.get_env(:elixir_metrics, :connect_timeout, 10_000)
+  @reconnect_interval Application.get_env(:elixir_metrics, :reconnect_interval, 5_000)
 
   def start_link(_), do: GenServer.start_link(__MODULE__, [], name: __MODULE__)
 
@@ -57,7 +57,6 @@ defmodule ElixirMetrics.Collectd do
   end
 
   def handle_info(:reconnect, {nil, buffer}) do
-    IO.puts("Connect to #{@socket_path}")
     case :gen_tcp.connect({:local, @socket_path}, 0, [:local, active: false, mode: :binary], @connect_timeout) do
       {:ok, socket} ->
         {:noreply, {socket, buffer}}

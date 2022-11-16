@@ -9,7 +9,7 @@ defmodule ElixirMetrics do
   }
 
   @app_name Application.get_env(:elixir_metrics, :app_name)
-  @use_collectd Application.get_env(:elixir_metrics, :use_collectd)
+  @use_collectd Application.get_env(:elixir_metrics, :use_collectd, true)
 
   def start_link(children) do
     Supervisor.start_link(__MODULE__, children, [name: __MODULE__])
@@ -51,8 +51,6 @@ defmodule ElixirMetrics do
     Application.app_dir(@app_name, "priv") |> Path.join("metrics")
   end
 
-
-
   def get_installed_metrics() do
     dir = metrics_dir()
     dir
@@ -74,6 +72,9 @@ defmodule ElixirMetrics do
       :gauge -> Telemetry.Metrics.last_value(p)
     end
     file = Path.join([metrics_dir(), "#{p}.metric"])
+    # If you want to see which metrics are being added to the system,
+    # uncomment this next line. Since metrics are added at compile time,
+    # you just need to run `mix compile` to get them all printed out.
     # IO.puts "Installed metric: #{metric.__struct__} #{p}.metric"
     contents = :erlang.term_to_binary(metric)
     File.write!(file, contents)
@@ -172,7 +173,7 @@ defmodule ElixirMetrics do
     end
   end
 
-  def top(n) do
+  def top(n \\ 10) do
     :erlang.processes
     |> Enum.flat_map(fn p ->
       case :erlang.process_info(p, :memory) do
