@@ -1,4 +1,11 @@
 # ElixirMetrics
+Simple library for sending telemetry metrics to collectd. All metrics paths are generated at compile time. Do things like
+
+```
+Metrics.timed do
+  do_a_thing()
+end
+```
 
 ## Usage
 
