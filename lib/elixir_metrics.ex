@@ -8,8 +8,8 @@ defmodule ElixirMetrics do
     Collectd,
   }
 
-  @app_name Application.get_env(:elixir_metrics, :app_name)
-  @use_collectd Application.get_env(:elixir_metrics, :use_collectd, true)
+  @app_name Application.compile_env(:elixir_metrics, :app_name)
+  @use_collectd Application.compile_env(:elixir_metrics, :use_collectd, true)
 
   def start_link(children) do
     Supervisor.start_link(__MODULE__, children, [name: __MODULE__])

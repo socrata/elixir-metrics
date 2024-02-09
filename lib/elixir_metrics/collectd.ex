@@ -3,13 +3,13 @@ defmodule ElixirMetrics.Collectd do
   use GenServer
   alias ElixirMetrics.{CounterReporter, GaugeReporter, TimerReporter}
 
-  @app_name Application.get_env(:elixir_metrics, :app_name)
+  @app_name Application.compile_env(:elixir_metrics, :app_name)
   @read_timeout 15_000
   @buffer_max 200
-  @socket_path :erlang.binary_to_list(Application.get_env(:elixir_metrics, :unixsock, "/var/run/collectd-unixsock"))
-  @interval Application.get_env(:elixir_metrics, :collection_interval, 10_000)
-  @connect_timeout Application.get_env(:elixir_metrics, :connect_timeout, 10_000)
-  @reconnect_interval Application.get_env(:elixir_metrics, :reconnect_interval, 5_000)
+  @socket_path :erlang.binary_to_list(Application.compile_env(:elixir_metrics, :unixsock, "/var/run/collectd-unixsock"))
+  @interval Application.compile_env(:elixir_metrics, :collection_interval, 10_000)
+  @connect_timeout Application.compile_env(:elixir_metrics, :connect_timeout, 10_000)
+  @reconnect_interval Application.compile_env(:elixir_metrics, :reconnect_interval, 5_000)
 
   def start_link(_), do: GenServer.start_link(__MODULE__, [], name: __MODULE__)
 

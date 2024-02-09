@@ -5,7 +5,7 @@ defmodule ElixirMetrics.Poller do
       import ElixirMetrics
       require Logger
 
-      @interval Application.get_env(:elixir_metrics, :collection_interval)
+      @interval Application.compile_env(:elixir_metrics, :collection_interval)
       def start_link(_), do: GenServer.start_link(__MODULE__, [], name: __MODULE__)
       def init(_) do
         schedule_next_gather()
